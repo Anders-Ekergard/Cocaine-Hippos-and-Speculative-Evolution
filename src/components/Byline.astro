@@ -1,0 +1,21 @@
+---
+import { author } from '../lib/site';
+
+interface Props {
+  published: Date;
+  updated?: Date;
+}
+const { published, updated } = Astro.props;
+const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+<p class="byline">
+  By <a href="/about/">{author.name}</a> ·
+  <time datetime={published.toISOString().slice(0, 10)}>{fmt(published)}</time>
+  {updated && updated > published && (
+    <> · updated <time datetime={updated.toISOString().slice(0, 10)}>{fmt(updated)}</time></>
+  )}
+</p>
+
+<style>
+  .byline { color: var(--muted); font-size: 0.92rem; margin: 0 0 1rem; }
+</style>

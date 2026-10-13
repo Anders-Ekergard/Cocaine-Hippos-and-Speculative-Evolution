@@ -1,9 +1,24 @@
 ---
-title: The Magdalena Hippos
+title: "Pablo Escobar's Cocaine Hippos: Facts, Impact and Evolutionary Future"
 tagline: Four hippos, one river, twenty million years.
 summary: In the 1980s Pablo Escobar shipped a handful of hippos to his private zoo in Colombia. Today their descendants number in the hundreds and are spreading along the Magdalena River. If nobody removes them, what could they become?
 region: Magdalena River basin, Colombia
 introduced: "1980s"
+published: 2026-10-12
+updated: 2026-10-13
+faq:
+  - q: Why are they called the cocaine hippos?
+    a: They descend from animals that Pablo Escobar, head of the Medellín cocaine cartel, kept in the private zoo at his Hacienda Nápoles estate. The nickname comes from the money that paid for them.
+  - q: How many hippos live in Colombia?
+    a: A census carried out in 2021–2022 by the National University of Colombia, the Humboldt Institute and the regional authority Cornare estimated 181–215 hippos. That was about twice as many as earlier models predicted. Without management, published projections range from several hundred to well over a thousand animals within a few decades.
+  - q: How did hippos end up in Colombia?
+    a: Escobar imported a small group in the 1980s, usually reported as one male and three females. After his death in 1993 the other zoo animals were moved, but the hippos were left behind. They spread from the estate's ponds into the Magdalena River and its tributaries.
+  - q: Why can't they just be moved back to Africa?
+    a: Catching, sedating and transporting animals that weigh up to three tonnes is dangerous, slow and expensive, and few places are able or willing to take them. Sterilisation, relocation to sanctuaries abroad and culling have all been proposed, and each has run into practical, legal or public opposition.
+  - q: Are the hippos dangerous?
+    a: Yes. Hippos are among the most dangerous large animals in Africa, and they share the Magdalena with people who fish, farm and live along the river. In Colombia there have been attacks on people, and hippos have been killed in collisions with cars.
+  - q: Could the cocaine hippos evolve into a new species?
+    a: Not in our lifetime. A large mammal with a generation time of around ten years typically needs hundreds of thousands to millions of years to become a separate species. The setup is classic, though, with a tiny founder population isolated in a new environment. This site explores where that could lead, clearly labelled as speculation.
 sources:
   - label: Shurin et al. (2020) Ecosystem effects of the world's largest invasive animal. Ecology 101(5), e02991
     url: https://doi.org/10.1002/ecy.2991

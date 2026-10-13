@@ -43,7 +43,7 @@ export async function shareCard(opts: { kicker: string; title: string; subtitle?
   ${opts.subtitle ? `<text x="70" y="${subY}" class="sub">${esc(opts.subtitle)}</text>` : ''}
   ${body}
   <g transform="translate(800 80) scale(3.2)" fill="#c9a77f">${shapes[opts.shape]}</g>
-  <text x="1130" y="570" text-anchor="end" class="brand">After Escobar</text>
+  <text x="1130" y="570" text-anchor="end" class="brand">Cocaine Hippos: After Us</text>
 </svg>`;
   return sharp(Buffer.from(svg)).png().toBuffer();
 }

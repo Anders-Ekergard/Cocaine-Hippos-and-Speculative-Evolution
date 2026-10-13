@@ -1,28 +1,72 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Timeline from '../../components/Timeline.astro';
+import Byline from '../../components/Byline.astro';
 import { getEntry, render } from 'astro:content';
 import { getEras } from '../../lib/data';
+import { personLd } from '../../lib/site';
 
 const scenario = (await getEntry('scenarios', 'colombian-hippos'))!;
+const d = scenario.data;
 const { Content } = await render(scenario);
 const eras = await getEras();
+const site = Astro.site!;
+const url = new URL(Astro.url.pathname, site).href;
+const description =
+  "How many cocaine hippos live in Colombia, how Pablo Escobar's hippos took over the Magdalena River, what science says about their impact, and what they could evolve into.";
+
+const jsonLd = [
+  {
+    '@type': 'Article',
+    headline: d.title,
+    description,
+    url,
+    image: new URL('/og/default.png', site).href,
+    datePublished: d.published.toISOString(),
+    dateModified: (d.updated ?? d.published).toISOString(),
+    author: personLd(site),
+    citation: d.sources.map((s) => s.url),
+    about: { '@type': 'Taxon', name: 'Hippopotamus amphibius', taxonRank: 'species' },
+  },
+  ...(d.faq.length > 0
+    ? [{
+        '@type': 'FAQPage',
+        mainEntity: d.faq.map((f) => ({
+          '@type': 'Question',
+          name: f.q,
+          acceptedAnswer: { '@type': 'Answer', text: f.a },
+        })),
+      }]
+    : []),
+];
 ---
-<Base
-  title="Escobar's hippos in Colombia: facts and future"
-  description="How Pablo Escobar's hippos took over the Magdalena River, what science says about their impact, and a speculative look at what they could evolve into."
->
+<Base title="Pablo Escobar's cocaine hippos: facts, impact and future" description={description} jsonLd={jsonLd}>
   <article class="wrap">
-    <p class="eyebrow">Scenario · {scenario.data.region}</p>
-    <h1>{scenario.data.title}</h1>
-    <p class="lead">{scenario.data.summary}</p>
+    <p class="eyebrow">Scenario · {d.region}</p>
+    <h1>{d.title}</h1>
+    <Byline published={d.published} updated={d.updated} />
+    <p class="lead">{d.summary}</p>
     <Timeline eras={eras} />
     <div class="prose">
       <Content />
       <p><a class="btn" href={`/hippos/${eras[0].id}/`}>Walk the timeline →</a></p>
+
+      {d.faq.length > 0 && (
+        <section id="faq" class="faq">
+          <h2>Frequently asked questions</h2>
+          {d.faq.map((f) => (
+            <>
+              <h3>{f.q}</h3>
+              <p>{f.a}</p>
+            </>
+          ))}
+          <p>Read more: <a href="/hippos/new-species/">Could Colombia's hippos evolve into a new species?</a></p>
+        </section>
+      )}
+
       <h2>Sources</h2>
       <ol class="sources">
-        {scenario.data.sources.map((s) => <li><a href={s.url}>{s.label}</a></li>)}
+        {d.sources.map((s) => <li><a href={s.url}>{s.label}</a></li>)}
       </ol>
     </div>
   </article>
@@ -31,4 +75,6 @@ const eras = await getEras();
 <style>
   .sources { font-size: 0.92rem; padding-left: 1.25rem; }
   .sources li { margin-bottom: 0.4rem; }
+  .faq h3 { margin-top: 1.25rem; }
+  .faq h3 + p { margin-top: 0.25rem; }
 </style>

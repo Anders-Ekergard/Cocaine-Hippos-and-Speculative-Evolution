@@ -19,4 +19,4 @@ sources:
 
 Hippos spend the day in water and graze on land at night, sometimes several kilometres from the river. In Africa they act as "nutrient pumps": tonnes of grass become dung in the river and feed everything from algae to fish.
 
-In Colombia the population lacks the drought, competition and predators that keep it down in Africa. Females can start breeding younger, so the population grows faster than in most African populations.
+In Colombia the population lacks the drought, competition and predators that keep it down in Africa. More than a third of the counted animals are juveniles. One hypothesis is that females in Colombia reach maturity earlier than in Africa, which would make the population grow faster.

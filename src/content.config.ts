@@ -16,7 +16,10 @@ const scenarios = defineCollection({
     summary: z.string(),
     region: z.string(),
     introduced: z.string(),
+    published: z.coerce.date(),
+    updated: z.coerce.date().optional(),
     sources: z.array(source),
+    faq: z.array(z.object({ q: z.string(), a: z.string() })).default([]),
   }),
 });
 

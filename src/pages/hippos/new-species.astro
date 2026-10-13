@@ -1,0 +1,124 @@
+---
+import Base from '../../layouts/Base.astro';
+import Byline from '../../components/Byline.astro';
+import SpeciesCard from '../../components/SpeciesCard.astro';
+import { getSpecies } from '../../lib/data';
+import { personLd } from '../../lib/site';
+
+const published = new Date('2026-10-13');
+const title = "Could Colombia's cocaine hippos evolve into a new species?";
+const description =
+  "Escobar's hippos are isolated, inbred and living in a world without droughts or lions. Could they become a new species, and how long would it take? What evolutionary biology says.";
+const site = Astro.site!;
+const jsonLd = [
+  {
+    '@type': 'Article',
+    headline: title,
+    description,
+    url: new URL(Astro.url.pathname, site).href,
+    image: new URL('/og/hippopotamus-amphibius-magdalenae.png', site).href,
+    datePublished: published.toISOString(),
+    author: personLd(site),
+  },
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Cocaine hippos', item: new URL('/hippos/', site).href },
+      { '@type': 'ListItem', position: 2, name: 'A new species?' },
+    ],
+  },
+];
+const species = await getSpecies();
+const examples = ['hippopotamus-amphibius-magdalenae', 'hylopotamus-nanus', 'sirenopotamus-magdalenae']
+  .map((id) => species.find((s) => s.id === id))
+  .filter((s) => s !== undefined);
+---
+<Base title={title} description={description} ogImage="/og/hippopotamus-amphibius-magdalenae.png" jsonLd={jsonLd}>
+  <article class="wrap prose">
+    <p class="eyebrow"><a href="/hippos/">Cocaine hippos</a> · Evolution</p>
+    <h1>{title}</h1>
+    <Byline published={published} />
+    <p class="lead">
+      Short answer: not in our lifetime, and probably not at all if Colombia removes them. But if they stay, the
+      hippos have almost everything evolution needs to make something new.
+    </p>
+
+    <h2>What it takes to become a new species</h2>
+    <p>
+      A new species usually forms when part of a population is cut off from the rest, so that its genes no longer
+      mix with them, and is then shaped by different conditions for long enough. The Colombian hippos meet the first
+      condition completely. They are thousands of kilometres from Africa and will never breed with African hippos again.
+    </p>
+    <p>
+      The second condition is time. Hippos live long and breed slowly, with a generation time of roughly a decade. For
+      large mammals, becoming a distinct species typically takes hundreds of thousands to a few million years. Visible
+      changes in size or behaviour can come much faster, within thousands of years.
+    </p>
+
+    <h2>What is already different in Colombia</h2>
+    <ul>
+      <li>
+        <strong>A tiny founder population.</strong> All of them descend from a handful of animals, usually reported as
+        one male and three females. Their genetic variation is therefore a small, random sample of the species. This
+        <em>founder effect</em> can push a population in new directions quickly.
+      </li>
+      <li>
+        <strong>No drought.</strong> African hippos are limited by dry seasons that shrink their pools and grazing. The
+        Magdalena valley has water all year round.
+      </li>
+      <li>
+        <strong>No natural enemies for adults.</strong> There are no lions and no Nile crocodiles. The caimans are far
+        too small to take adults.
+      </li>
+      <li>
+        <strong>Rapid breeding.</strong> The 2021–2022 census found that more than a third of the animals were young.
+        One hypothesis is that females mature earlier than in Africa.
+      </li>
+      <li>
+        <strong>People.</strong> Hunting, fences, roads and boats favour hippos that are shy, nocturnal and keep their
+        distance. This is selection too.
+      </li>
+    </ul>
+
+    <h2>Is there a precedent?</h2>
+    <p>
+      Yes, several. The hippo family has repeatedly produced dwarf forms when populations were isolated. The pygmy hippo
+      lives in the rainforests of West Africa today, and extinct dwarf hippos lived on Cyprus, Crete, Sicily, Malta and
+      Madagascar. Hippos are also the closest living relatives of whales, which shows how far this branch of mammals can
+      go once it commits to the water.
+    </p>
+    <p>
+      Researchers have also pointed out that South America lost its giant herbivores at the end of the last ice age.
+      The hippos partly fill roles that have been empty for about 12,000 years. An empty ecological role is exactly the
+      kind of opportunity that drives evolution.
+    </p>
+
+    <h2>Why it probably won't happen</h2>
+    <p>
+      A population this small and inbred is vulnerable to disease and genetic problems. More importantly, Colombia
+      classifies the hippos as an invasive species, and sterilisation, relocation and culling are all on the table. The
+      evolutionary future described on this site is a thought experiment, not a forecast and not an argument for leaving
+      the hippos alone.
+    </p>
+
+    <h2>So what could they become?</h2>
+    <p>
+      If the thought experiment runs for twenty million years, the possibilities open up. A smaller Magdalena hippo
+      could appear within ten thousand years, a forest dwarf and a manatee-like river grazer within a few million, and
+      perhaps even a marine hippo grazing on the Caribbean seagrass beds.
+    </p>
+  </article>
+
+  <section class="wrap">
+    <div class="grid">{examples.map((s) => <SpeciesCard species={s} />)}</div>
+    <p class="cta">
+      <a class="btn" href="/hippos/present/">Walk the timeline</a>
+      <a class="btn secondary" href="/hippos/#faq">Facts and FAQ</a>
+    </p>
+  </section>
+</Base>
+
+<style>
+  .cta { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; }
+  li { margin-bottom: 0.5rem; }
+</style>

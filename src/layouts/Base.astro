@@ -1,14 +1,16 @@
 ---
 import '../styles/global.css';
+import { SITE_NAME as siteName } from '../lib/site';
 
 interface Props {
   title: string;
   description: string;
   ogImage?: string;
+  /** schema.org objects; rendered as one JSON-LD @graph. */
+  jsonLd?: Record<string, unknown>[];
 }
 
-const { title, description, ogImage = '/og/default.png' } = Astro.props;
-const siteName = 'After Escobar';
+const { title, description, ogImage = '/og/default.png', jsonLd = [] } = Astro.props;
 const fullTitle = title === siteName ? title : `${title} · ${siteName}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogUrl = new URL(ogImage, Astro.site);
@@ -30,6 +32,7 @@ const nav = [
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title={`${siteName}: new species`} href="/rss.xml" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={siteName} />
     <meta property="og:title" content={fullTitle} />
@@ -39,6 +42,9 @@ const nav = [
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
+    {jsonLd.length > 0 && (
+      <script type="application/ld+json" set:html={JSON.stringify({ '@context': 'https://schema.org', '@graph': jsonLd })} />
+    )}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -49,7 +55,7 @@ const nav = [
   <body>
     <header class="site-header">
       <div class="wrap bar">
-        <a class="brand" href="/">After&nbsp;Escobar</a>
+        <a class="brand" href="/">{siteName}</a>
         <nav aria-label="Main">
           {nav.map((n) => (
             <a href={n.href} aria-current={path.startsWith(n.href) ? 'page' : undefined}>{n.label}</a>
@@ -63,10 +69,14 @@ const nav = [
     <footer class="site-footer">
       <div class="wrap">
         <p>
-          <strong>After Escobar</strong> is a speculative evolution project. Present-day facts are sourced; everything
+          <strong>{siteName}</strong> is a speculative evolution project. Present-day facts are sourced; everything
           beyond today is clearly marked speculation. Text is shared under
           <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Contributors keep credit for
           their species.
+        </p>
+        <p class="footer-links">
+          <a href="/hippos/#faq">Cocaine hippo FAQ</a> · <a href="/hippos/new-species/">A new species?</a> ·
+          <a href="/teachers/">For teachers</a> · <a href="/rss.xml">RSS</a>
         </p>
       </div>
     </footer>

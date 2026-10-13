@@ -4,6 +4,7 @@ import Timeline from '../components/Timeline.astro';
 import SpeciesCard from '../components/SpeciesCard.astro';
 import { getEntry } from 'astro:content';
 import { getEras, getSpecies } from '../lib/data';
+import { SITE_NAME, personLd } from '../lib/site';
 
 const scenario = (await getEntry('scenarios', 'colombian-hippos'))!;
 const eras = await getEras();
@@ -11,15 +12,27 @@ const species = await getSpecies();
 const featured = ['hylopotamus-nanus', 'sirenopotamus-magdalenae', 'titanocaiman-venator']
   .map((id) => species.find((s) => s.id === id))
   .filter((s) => s !== undefined);
+const site = Astro.site!;
+const jsonLd = [
+  {
+    '@type': 'WebSite',
+    name: SITE_NAME,
+    url: site.href,
+    inLanguage: 'en',
+    description: "Speculative evolution of Pablo Escobar's cocaine hippos in Colombia.",
+    author: personLd(site),
+  },
+];
 const openNiches = eras.reduce((n, e) => n + e.data.niches.length, 0) + species.reduce((n, s) => n + s.data.niches.length, 0);
 ---
 <Base
-  title="After Escobar"
-  description="Speculative evolution of invasive species. What will Pablo Escobar's hippos in Colombia evolve into over 20 million years? Explore the eras and fill the open niches."
+  title={SITE_NAME}
+  description="What will Pablo Escobar's cocaine hippos in Colombia evolve into? A science-based speculative evolution of the invasive hippos and their ecosystem over 20 million years."
+  jsonLd={jsonLd}
 >
   <section class="wrap hero">
     <p class="eyebrow">Speculative evolution · invasive species</p>
-    <h1>What becomes of Escobar's hippos in twenty million years?</h1>
+    <h1>What will Escobar's cocaine hippos become in twenty million years?</h1>
     <p class="lead">
       A handful of hippos escaped a drug lord's zoo and now live wild in Colombia. This project follows their
       descendants and their neighbours into the deep future. It starts from real ecology and builds a family tree
@@ -29,6 +42,7 @@ const openNiches = eras.reduce((n, e) => n + e.data.niches.length, 0) + species.
       <a class="btn" href="/hippos/">Start in the present</a>
       <a class="btn secondary" href="/contribute/">Fill an open niche</a>
     </p>
+    <p class="muted">Short version: <a href="/hippos/new-species/">Could Colombia's hippos become a new species?</a></p>
   </section>
 
   <section class="wrap">

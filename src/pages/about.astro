@@ -1,16 +1,18 @@
 ---
 import Base from '../layouts/Base.astro';
-import { Content as AuthorText, frontmatter as author } from '../author.md';
+import { Image } from 'astro:assets';
+import { Content as AuthorText } from '../author.md';
+import { author, SITE_NAME } from '../lib/site';
 ---
 <Base
   title="About and method"
-  description="How After Escobar separates real science from speculation, and how the project grows with contributions."
+  description="How Cocaine Hippos: After Us separates real science from speculation, and how the project grows with contributions."
 >
   <section class="wrap prose">
     <p class="eyebrow">About</p>
     <h1>About and method</h1>
     <p class="lead">
-      After Escobar is a speculative evolution project about what <em>invasive species</em> could become if they are
+      {SITE_NAME} is a speculative evolution project about what <em>invasive species</em> could become if they are
       left alone for geological time. It starts with Colombia's hippos.
     </p>
 
@@ -43,6 +45,7 @@ import { Content as AuthorText, frontmatter as author } from '../author.md';
       <>
         <h2>Who's behind this</h2>
         <div class="card author">
+          <Image class="photo" src={author.photo} alt={`Portrait of ${author.name}`} width={120} height={120} densities={[1, 2]} />
           <p class="who">
             {author.link ? <a href={author.link}>{author.name}</a> : author.name}{author.role && <span class="role">, {author.role.toLowerCase()}</span>}
           </p>
@@ -60,6 +63,9 @@ import { Content as AuthorText, frontmatter as author } from '../author.md';
 </Base>
 
 <style>
+  .author { overflow: hidden; }
+  .author :global(.photo) { float: left; width: 120px; height: 120px; object-fit: cover; border-radius: 50%; margin: 0 1.1rem 0.5rem 0; border: 3px solid var(--mud-soft); }
+  @media (max-width: 30rem) { .author :global(.photo) { float: none; display: block; margin: 0 0 0.75rem; } }
   .author .who { font-family: var(--font-head); font-size: 1.2rem; font-weight: 600; margin: 0 0 0.5rem; }
   .author .role { font-style: italic; font-weight: 500; color: var(--muted); }
   .author :global(p:last-child) { margin-bottom: 0; }

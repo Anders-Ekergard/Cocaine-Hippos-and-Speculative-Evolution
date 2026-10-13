@@ -1,4 +1,4 @@
-# After Escobar
+# Cocaine Hippos: After Us
 
 En statisk sajt (Astro) om spekulativ evolution för invasiva arter, med Colombias flodhästar som första scenario. Sajten är på engelska.
 
@@ -59,8 +59,15 @@ Formuläret på `/contribute/` använder **Netlify Forms**. Det fungerar först 
 
 ## Publicering
 
-1. Lägg projektet i ett GitHub-repo och koppla det till Netlify. `netlify.toml` är redan konfigurerad.
-2. Byt `site` i `astro.config.mjs` till den riktiga domänen. Sitemap och delningskort använder den.
+Sajten ligger på https://cocaine-hippos-after-us.netlify.app. Netlify bygger och publicerar automatiskt varje gång något skickas upp till `main` på GitHub.
+
+## Presentation och foto
+
+Texten skriver du i `src/author.md`. Fotot är `src/assets/author.png`: ersätt filen för att byta foto (den beskärs automatiskt till en cirkel).
+
+## Synlighet
+
+Nya artiklar och FAQ, strukturerad data (JSON-LD), RSS (`/rss.xml`), `robots.txt` och sitemap finns redan. Checklistan för Search Console och mejlutkasten ligger i `outreach/` och laddas inte upp till GitHub.
 
 ## Innan publicering
 

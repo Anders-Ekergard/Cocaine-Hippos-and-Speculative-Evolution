@@ -5,6 +5,7 @@ import SpeciesCard from '../../components/SpeciesCard.astro';
 import NicheList from '../../components/NicheList.astro';
 import { getEntry, render } from 'astro:content';
 import { children, getSpecies, lineage, statusLabel, type Species } from '../../lib/data';
+import { personLd } from '../../lib/site';
 
 export async function getStaticPaths() {
   const all = await getSpecies();
@@ -19,6 +20,28 @@ const all = await getSpecies();
 const era = (await getEntry(d.era))!;
 const chain = lineage(all, species);
 const descendants = children(all, species.id);
+const site = Astro.site!;
+const jsonLd = [
+  {
+    '@type': 'Article',
+    headline: `${d.name} (${d.binomial})`,
+    description: d.summary,
+    url: new URL(Astro.url.pathname, site).href,
+    image: new URL(`/og/${species.id}.png`, site).href,
+    author: d.credit ? { '@type': 'Person', name: d.credit.name, ...(d.credit.url && { url: d.credit.url }) } : personLd(site),
+    about: d.status === 'real'
+      ? { '@type': 'Taxon', name: d.binomial }
+      : { '@type': 'Thing', name: d.name, description: 'A fictional species in a speculative evolution scenario.' },
+  },
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Cocaine hippos', item: new URL('/hippos/', site).href },
+      { '@type': 'ListItem', position: 2, name: `${era.data.label}: ${era.data.title}`, item: new URL(`/hippos/${era.id}/`, site).href },
+      { '@type': 'ListItem', position: 3, name: d.name },
+    ],
+  },
+];
 const confidenceText = {
   established: 'Established science: this species exists today.',
   plausible: 'Plausible: built on close real-world parallels.',
@@ -29,6 +52,7 @@ const confidenceText = {
   title={`${d.name} (${d.binomial})`}
   description={`${d.summary} ${era.data.label} in the speculative evolution of Colombia's hippos.`}
   ogImage={`/og/${species.id}.png`}
+  jsonLd={jsonLd}
 >
   <article class="wrap">
     <p class="eyebrow"><a href={`/hippos/${era.id}/`}>{era.data.label} · {era.data.title}</a></p>
@@ -77,6 +101,7 @@ const confidenceText = {
           ))}
         </ol>
         <p class="small"><a href="/tree/">Whole tree →</a></p>
+        <p class="small"><a href="/hippos/#faq">Facts about the real cocaine hippos →</a></p>
       </aside>
     </div>
 

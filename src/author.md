@@ -1,6 +1,6 @@
 ---
 # Your presentation on the About page. Edit freely.
-# Set `show: true` when the text is ready. Until then the section is hidden.
+# `show: false` hides the section. The photo is src/assets/author.png: replace that file to change it.
 show: true
 name: Anders Ekergård
 role: Versatile dilettante
