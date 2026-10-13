@@ -1,8 +1,8 @@
 ---
 # Your presentation on the About page. Edit freely.
 # Set `show: true` when the text is ready. Until then the section is hidden.
-show: false
-name: Your Name
+show: true
+name: Anders Ekergård
 role: Versatile dilettante
 link:
 ---
