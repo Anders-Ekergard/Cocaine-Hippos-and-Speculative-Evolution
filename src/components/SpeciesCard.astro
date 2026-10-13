@@ -1,0 +1,27 @@
+---
+import Silhouette from './Silhouette.astro';
+import { statusLabel, type Species } from '../lib/data';
+
+interface Props {
+  species: Species;
+}
+const { species } = Astro.props;
+const d = species.data;
+---
+<a class="card species-card" href={`/species/${species.id}/`}>
+  <div class="art"><Silhouette shape={d.shape} label={`Silhouette of ${d.name}`} /></div>
+  <span class:list={['badge', d.status]}>{statusLabel[d.status]}</span>
+  <h3>{d.name}</h3>
+  <p class="binomial"><em>{d.binomial}</em></p>
+  <p class="summary">{d.summary}</p>
+</a>
+
+<style>
+  .species-card { display: flex; flex-direction: column; gap: 0.25rem; color: var(--text); text-decoration: none; transition: border-color 0.15s, transform 0.15s; }
+  .species-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .art { background: var(--mud-soft); border-radius: 8px; padding: 0.8rem 1.6rem; margin-bottom: 0.5rem; }
+  .badge { align-self: flex-start; }
+  h3 { margin: 0.35rem 0 0; }
+  .binomial { margin: 0; color: var(--muted); font-size: 0.92rem; }
+  .summary { margin: 0.4rem 0 0; font-size: 0.95rem; }
+</style>

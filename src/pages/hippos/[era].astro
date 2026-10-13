@@ -1,0 +1,59 @@
+---
+import Base from '../../layouts/Base.astro';
+import Timeline from '../../components/Timeline.astro';
+import SpeciesCard from '../../components/SpeciesCard.astro';
+import NicheList from '../../components/NicheList.astro';
+import { render } from 'astro:content';
+import { getEras, getSpecies, speciesInEra, type Era } from '../../lib/data';
+
+export async function getStaticPaths() {
+  const eras = await getEras();
+  return eras.map((era, i) => ({
+    params: { era: era.id },
+    props: { era, prev: eras[i - 1], next: eras[i + 1] },
+  }));
+}
+
+interface Props { era: Era; prev?: Era; next?: Era }
+const { era, prev, next } = Astro.props;
+const { Content } = await render(era);
+const eras = await getEras();
+const species = speciesInEra(await getSpecies(), era.id);
+---
+<Base
+  title={`${era.data.label}: ${era.data.title}`}
+  description={`${era.data.summary} Speculative evolution of Colombia's invasive hippos.`}
+>
+  <article class="wrap">
+    <p class="eyebrow">The Magdalena Hippos · {era.data.label}</p>
+    <h1>{era.data.title}</h1>
+    <p class="lead">{era.data.summary}</p>
+    <Timeline eras={eras} current={era.id} />
+
+    <div class="prose">
+      <p class="climate"><strong>Environment:</strong> {era.data.climate}</p>
+      <Content />
+    </div>
+
+    <h2>Species in this era</h2>
+    {species.length > 0 ? (
+      <div class="grid">{species.map((s) => <SpeciesCard species={s} />)}</div>
+    ) : (
+      <p class="muted">No species described yet. <a href="/contribute/">Be the first.</a></p>
+    )}
+
+    <div class="prose">
+      <NicheList niches={era.data.niches} context={`era:${era.id}`} />
+    </div>
+
+    <nav class="pager" aria-label="Era navigation">
+      {prev ? <a href={`/hippos/${prev.id}/`}>← {prev.data.label}: {prev.data.title}</a> : <span />}
+      {next && <a href={`/hippos/${next.id}/`}>{next.data.label}: {next.data.title} →</a>}
+    </nav>
+  </article>
+</Base>
+
+<style>
+  .climate { background: var(--accent-soft); padding: 0.75rem 1rem; border-radius: var(--radius); }
+  .pager { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 1rem; font-weight: 600; }
+</style>

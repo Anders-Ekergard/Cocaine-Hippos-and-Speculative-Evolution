@@ -1,0 +1,32 @@
+---
+interface Props {
+  niches: { question: string; hint?: string }[];
+  context: string; // e.g. era or species id, passed to the contribute form
+}
+const { niches, context } = Astro.props;
+---
+{niches.length > 0 && (
+  <section class="niches">
+    <h2>Open niches</h2>
+    <p class="muted">Unanswered questions about this ecosystem. Propose a species or an answer, and the best ones become canon with your name on them.</p>
+    <ul>
+      {niches.map((n) => (
+        <li class="card">
+          <p class="q">{n.question}</p>
+          {n.hint && <p class="hint">{n.hint}</p>}
+          <a class="btn secondary" href={`/contribute/?context=${encodeURIComponent(context)}&niche=${encodeURIComponent(n.question)}`}>
+            Fill this niche
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+<style>
+  .niches ul { list-style: none; padding: 0; margin: 1rem 0 0; display: grid; gap: 0.75rem; }
+  .niches li { border-left: 4px solid var(--community); }
+  .q { font-weight: 600; margin: 0; }
+  .hint { color: var(--muted); margin: 0.25rem 0 0.75rem; font-size: 0.95rem; }
+  .btn { font-size: 0.9rem; padding: 0.4rem 0.9rem; margin-top: 0.5rem; }
+</style>

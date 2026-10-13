@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import PhyloTree from '../components/PhyloTree.astro';
+import { getEras, getSpecies } from '../lib/data';
+
+const eras = await getEras();
+const species = await getSpecies();
+---
+<Base
+  title="Tree of life"
+  description="The full family tree of the speculative Magdalena hippo scenario: every species from today to 20 million years in the future."
+>
+  <section class="wrap">
+    <p class="eyebrow">{species.length} species · {eras.length} eras</p>
+    <h1>Tree of life</h1>
+    <p class="lead">Every lineage in the scenario. Click a species to read about it, or an era to see its ecosystem.</p>
+    <p class="legend">
+      <span class="badge real">Living today</span>
+      <span class="badge canon">Canon</span>
+      <span class="badge community">Community</span>
+    </p>
+    <PhyloTree eras={eras} species={species} />
+    <p class="muted hint">Scroll sideways on small screens.</p>
+  </section>
+</Base>
+
+<style>
+  .legend { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .hint { font-size: 0.85rem; }
+</style>

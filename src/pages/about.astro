@@ -1,0 +1,66 @@
+---
+import Base from '../layouts/Base.astro';
+import { Content as AuthorText, frontmatter as author } from '../author.md';
+---
+<Base
+  title="About and method"
+  description="How After Escobar separates real science from speculation, and how the project grows with contributions."
+>
+  <section class="wrap prose">
+    <p class="eyebrow">About</p>
+    <h1>About and method</h1>
+    <p class="lead">
+      After Escobar is a speculative evolution project about what <em>invasive species</em> could become if they are
+      left alone for geological time. It starts with Colombia's hippos.
+    </p>
+
+    <h2>Why invasive species?</h2>
+    <p>
+      Most speculative evolution takes place on invented planets or after a made-up catastrophe. Invasive species are
+      a real experiment that is already running. Animals have been moved by people to places where they never
+      evolved, and their new neighbours are already reacting. This makes a good starting point for thinking about
+      evolution. It does not mean the project thinks invasions are good or should be left alone.
+    </p>
+
+    <h2>Three levels of certainty</h2>
+    <ul>
+      <li><span class="badge conf">established</span> Species and facts that exist today, with sources.</li>
+      <li><span class="badge conf">plausible</span> Future species built on close real-world parallels, such as dwarf hippos on islands.</li>
+      <li><span class="badge conf">speculative</span> Bolder steps, still reasoned, but with large uncertainty.</li>
+    </ul>
+
+    <h2>Canon and community</h2>
+    <p>
+      <span class="badge canon">Canon</span> species are written by the editors and form the backbone of the scenario.
+      <span class="badge community">Community</span> species are accepted submissions from visitors. Both appear in
+      the tree and on the era pages, and community species always carry their creator's name.
+    </p>
+
+    <h2>Coming scenarios</h2>
+    <p>The hippos are the first. Possible next ones: feral camels in Australia, cane toads, wild horses and donkeys in North America, rabbits in Australia. <a href="/contribute/?context=new-scenario">Suggest a scenario</a>.</p>
+
+    {author.show && (
+      <>
+        <h2>Who's behind this</h2>
+        <div class="card author">
+          <p class="who">
+            {author.link ? <a href={author.link}>{author.name}</a> : author.name}{author.role && <span class="role">, {author.role.toLowerCase()}</span>}
+          </p>
+          <AuthorText />
+        </div>
+      </>
+    )}
+
+    <h2>Inspiration</h2>
+    <p>
+      Dougal Dixon's <em>After Man</em> (1981), <em>The Future Is Wild</em>, <em>Serina</em>, and collaborative
+      projects such as Sagan&nbsp;4 and OurFoodChain. The real science comes from the researchers cited on each page.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .author .who { font-family: var(--font-head); font-size: 1.2rem; font-weight: 600; margin: 0 0 0.5rem; }
+  .author .role { font-style: italic; font-weight: 500; color: var(--muted); }
+  .author :global(p:last-child) { margin-bottom: 0; }
+</style>

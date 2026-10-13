@@ -1,0 +1,34 @@
+---
+import Base from '../../layouts/Base.astro';
+import Timeline from '../../components/Timeline.astro';
+import { getEntry, render } from 'astro:content';
+import { getEras } from '../../lib/data';
+
+const scenario = (await getEntry('scenarios', 'colombian-hippos'))!;
+const { Content } = await render(scenario);
+const eras = await getEras();
+---
+<Base
+  title="Escobar's hippos in Colombia: facts and future"
+  description="How Pablo Escobar's hippos took over the Magdalena River, what science says about their impact, and a speculative look at what they could evolve into."
+>
+  <article class="wrap">
+    <p class="eyebrow">Scenario · {scenario.data.region}</p>
+    <h1>{scenario.data.title}</h1>
+    <p class="lead">{scenario.data.summary}</p>
+    <Timeline eras={eras} />
+    <div class="prose">
+      <Content />
+      <p><a class="btn" href={`/hippos/${eras[0].id}/`}>Walk the timeline →</a></p>
+      <h2>Sources</h2>
+      <ol class="sources">
+        {scenario.data.sources.map((s) => <li><a href={s.url}>{s.label}</a></li>)}
+      </ol>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .sources { font-size: 0.92rem; padding-left: 1.25rem; }
+  .sources li { margin-bottom: 0.4rem; }
+</style>

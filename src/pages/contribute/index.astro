@@ -1,0 +1,113 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getEras, getSpecies } from '../../lib/data';
+
+const eras = await getEras();
+const species = await getSpecies();
+---
+<Base
+  title="Contribute a species"
+  description="Propose a species for the speculative evolution of Colombia's hippos. Accepted submissions become canon and are credited to you."
+>
+  <section class="wrap prose">
+    <p class="eyebrow">Contribute</p>
+    <h1>Fill a niche</h1>
+    <p class="lead">
+      Pick an open niche, or an ancestor you want to evolve, and describe what lives there. No account is needed.
+    </p>
+
+    <h2>What makes a good submission</h2>
+    <ul>
+      <li><strong>An ancestor.</strong> Every species descends from something already in the tree, or from a real species living in the region today.</li>
+      <li><strong>A reason.</strong> Name a real-world analogue or mechanism: dwarfism, convergence, a fossil precedent.</li>
+      <li><strong>Enough time.</strong> Big body-plan changes need millions of years. Behaviour can change in thousands.</li>
+      <li><strong>Fit with the ecosystem.</strong> What does it eat, and what eats it?</li>
+    </ul>
+    <p class="muted">
+      The editors review submissions. Accepted species get their own page, marked <em>Community</em> and credited
+      with your name and link. Artwork for existing species is just as welcome.
+    </p>
+
+    <form name="species" method="POST" action="/contribute/thanks/" data-netlify="true" netlify-honeypot="website">
+      <input type="hidden" name="form-name" value="species" />
+      <p hidden><label>Leave empty: <input name="website" /></label></p>
+
+      <label for="context">Responding to</label>
+      <input id="context" name="context" placeholder="e.g. an open niche, or 'new idea'" />
+      <input type="hidden" id="niche" name="niche" />
+      <p id="niche-text" class="niche-text" hidden></p>
+
+      <label for="name">Species common name</label>
+      <input id="name" name="name" required />
+
+      <label for="binomial">Scientific name <small>(optional)</small></label>
+      <input id="binomial" name="binomial" />
+
+      <label for="ancestor">Ancestor</label>
+      <select id="ancestor" name="ancestor" required>
+        <option value="">Choose…</option>
+        {species.map((s) => <option value={s.id}>{s.data.name} ({s.data.binomial})</option>)}
+        <option value="other">Another living species (describe below)</option>
+      </select>
+
+      <label for="era">Era</label>
+      <select id="era" name="era" required>
+        {eras.map((e) => <option value={e.id}>{e.data.label}: {e.data.title}</option>)}
+      </select>
+
+      <label for="description">Description</label>
+      <textarea id="description" name="description" required placeholder="Appearance, size, diet, habitat, behaviour…"></textarea>
+
+      <label for="reasoning">Why this could evolve</label>
+      <textarea id="reasoning" name="reasoning" required placeholder="Real-world analogues, selection pressures, fossil precedents…"></textarea>
+
+      <label for="art">Link to artwork <small>(optional)</small></label>
+      <input id="art" name="art" type="url" placeholder="https://…" />
+
+      <label for="credit">Credit me as</label>
+      <input id="credit" name="credit" required placeholder="Name or handle" />
+
+      <label for="credit-url">Link for your credit <small>(optional: portfolio, DeviantArt, Reddit…)</small></label>
+      <input id="credit-url" name="credit-url" type="url" />
+
+      <label for="email">Email <small>(optional, never published, only for questions about your submission)</small></label>
+      <input id="email" name="email" type="email" />
+
+      <label class="check">
+        <input type="checkbox" name="license" required />
+        I created this and agree to share the text under CC BY-SA 4.0. Artwork stays mine; I allow it to be shown on this site with credit.
+      </label>
+
+      <p><button class="btn" type="submit">Send submission</button></p>
+    </form>
+  </section>
+</Base>
+
+<script>
+  // Prefill from links like /contribute/?context=era:1ma&niche=...&ancestor=...
+  const q = new URLSearchParams(location.search);
+  const set = (id: string, v: string | null) => {
+    const el = document.getElementById(id) as HTMLInputElement | HTMLSelectElement | null;
+    if (el && v) el.value = v;
+  };
+  set('context', q.get('context'));
+  set('niche', q.get('niche'));
+  set('ancestor', q.get('ancestor'));
+  const niche = q.get('niche');
+  const nicheText = document.getElementById('niche-text');
+  if (niche && nicheText) {
+    nicheText.textContent = `Open niche: ${niche}`;
+    nicheText.hidden = false;
+  }
+  const ctx = q.get('context') ?? '';
+  const eraMatch = ctx.match(/^era:(.+)$/);
+  if (eraMatch) set('era', eraMatch[1]);
+</script>
+
+<style>
+  form { margin-top: 2rem; }
+  .check { display: flex; gap: 0.6rem; align-items: flex-start; font-weight: 400; margin-top: 1.25rem; }
+  .check input { width: auto; margin-top: 0.35rem; }
+  .niche-text { border-left: 4px solid var(--community); padding: 0.5rem 0.8rem; background: var(--surface); margin: 0.5rem 0 0; }
+  button.btn { border: 0; cursor: pointer; font: inherit; font-weight: 600; margin-top: 1rem; }
+</style>

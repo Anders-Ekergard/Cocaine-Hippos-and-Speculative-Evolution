@@ -1,0 +1,17 @@
+---
+import { shapes, type Shape } from '../lib/shapes';
+
+interface Props {
+  shape: Shape;
+  label: string;
+  class?: string;
+}
+const { shape, label, class: className } = Astro.props;
+---
+<svg class:list={['silhouette', className]} viewBox="0 0 120 60" role="img" aria-label={label} fill="currentColor">
+  <Fragment set:html={shapes[shape]} />
+</svg>
+
+<style>
+  .silhouette { display: block; width: 100%; height: auto; color: var(--mud); }
+</style>

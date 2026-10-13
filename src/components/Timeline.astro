@@ -1,0 +1,48 @@
+---
+import type { Era } from '../lib/data';
+
+interface Props {
+  eras: Era[];
+  current?: string;
+}
+const { eras, current } = Astro.props;
+---
+<nav class="timeline" aria-label="Eras">
+  <ol style={`--n: ${eras.length}`}>
+    {eras.map((e) => (
+      <li class:list={{ current: e.id === current }}>
+        <a href={`/hippos/${e.id}/`} aria-current={e.id === current ? 'page' : undefined}>
+          <span class="dot" aria-hidden="true"></span>
+          <span class="label">{e.data.label}</span>
+          <span class="title">{e.data.title}</span>
+        </a>
+      </li>
+    ))}
+  </ol>
+</nav>
+
+<style>
+  .timeline { margin: 1.5rem 0; overflow-x: auto; }
+  ol {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: repeat(var(--n, 5), minmax(7.5rem, 1fr));
+    position: relative;
+  }
+  ol::before {
+    content: ''; position: absolute; left: 0; right: 0; top: 0.55rem; height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--mud));
+    border-radius: 2px;
+  }
+  li a { display: flex; flex-direction: column; gap: 0.15rem; padding-right: 0.75rem; text-decoration: none; color: var(--text); position: relative; }
+  .dot { width: 1.2rem; height: 1.2rem; border-radius: 50%; background: var(--surface); border: 3px solid var(--accent); margin-bottom: 0.4rem; }
+  .label { font-weight: 600; font-size: 0.95rem; }
+  .title { color: var(--muted); font-size: 0.85rem; }
+  li a:hover .dot, li.current .dot { background: var(--accent); }
+  li.current .label { color: var(--accent); }
+  @media (max-width: 40rem) {
+    ol { grid-template-columns: 1fr; gap: 0.6rem; padding-left: 0.5rem; }
+    ol::before { left: 0.5rem; right: auto; top: 0; bottom: 0; width: 3px; height: auto; background: linear-gradient(180deg, var(--accent), var(--mud)); }
+    li a { flex-direction: row; align-items: center; gap: 0.6rem; margin-left: -0.6rem; }
+    .dot { margin: 0; flex: none; }
+  }
+</style>

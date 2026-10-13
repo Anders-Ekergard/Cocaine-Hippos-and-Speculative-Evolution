@@ -1,0 +1,71 @@
+---
+import Base from '../layouts/Base.astro';
+import Timeline from '../components/Timeline.astro';
+import SpeciesCard from '../components/SpeciesCard.astro';
+import { getEntry } from 'astro:content';
+import { getEras, getSpecies } from '../lib/data';
+
+const scenario = (await getEntry('scenarios', 'colombian-hippos'))!;
+const eras = await getEras();
+const species = await getSpecies();
+const featured = ['hylopotamus-nanus', 'sirenopotamus-magdalenae', 'titanocaiman-venator']
+  .map((id) => species.find((s) => s.id === id))
+  .filter((s) => s !== undefined);
+const openNiches = eras.reduce((n, e) => n + e.data.niches.length, 0) + species.reduce((n, s) => n + s.data.niches.length, 0);
+---
+<Base
+  title="After Escobar"
+  description="Speculative evolution of invasive species. What will Pablo Escobar's hippos in Colombia evolve into over 20 million years? Explore the eras and fill the open niches."
+>
+  <section class="wrap hero">
+    <p class="eyebrow">Speculative evolution · invasive species</p>
+    <h1>What becomes of Escobar's hippos in twenty million years?</h1>
+    <p class="lead">
+      A handful of hippos escaped a drug lord's zoo and now live wild in Colombia. This project follows their
+      descendants and their neighbours into the deep future. It starts from real ecology and builds a family tree
+      that anyone can add to.
+    </p>
+    <p class="actions">
+      <a class="btn" href="/hippos/">Start in the present</a>
+      <a class="btn secondary" href="/contribute/">Fill an open niche</a>
+    </p>
+  </section>
+
+  <section class="wrap">
+    <h2>Five stops on the timeline</h2>
+    <Timeline eras={eras} />
+  </section>
+
+  <section class="wrap">
+    <h2>From the future</h2>
+    <div class="grid">
+      {featured.map((s) => <SpeciesCard species={s} />)}
+    </div>
+    <p><a href="/tree/">See the whole tree of life →</a></p>
+  </section>
+
+  <section class="wrap how">
+    <h2>How it works</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>1. Real start</h3>
+        <p>The present day is built on published research: {scenario.data.region}, hippos since the {scenario.data.introduced}, sources on every page.</p>
+      </div>
+      <div class="card">
+        <h3>2. Reasoned future</h3>
+        <p>Each future species points to a real analogue, such as island dwarfs, whales or Miocene giant caimans, and says plainly how speculative it is.</p>
+      </div>
+      <div class="card">
+        <h3>3. Open niches</h3>
+        <p>There are <strong>{openNiches} open questions</strong> in the ecosystem right now. Propose a species. Accepted ones become canon, credited to you.</p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero { padding-top: 2rem; padding-bottom: 1rem; }
+  .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; }
+  .how h3 { margin-top: 0; }
+  .how p { margin-bottom: 0; }
+</style>

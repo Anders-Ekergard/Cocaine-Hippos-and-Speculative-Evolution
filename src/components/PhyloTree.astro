@@ -1,0 +1,89 @@
+---
+// Draws the species forest as an SVG: x = era, y = assigned by depth-first layout.
+// New species files appear here automatically through their `ancestor` field.
+import { children, type Era, type Species } from '../lib/data';
+
+interface Props {
+  eras: Era[];
+  species: Species[];
+}
+const { eras, species } = Astro.props;
+
+const colW = 210;
+const rowH = 52;
+const padX = 20;
+const padTop = 56;
+const eraIndex = new Map(eras.map((e, i) => [e.id, i]));
+const ids = new Set(species.map((s) => s.id));
+const descendantCount = (id: string): number =>
+  children(species, id).reduce((n, k) => n + 1 + descendantCount(k.id), 0);
+// Largest lineage (the hippos) first.
+const roots = species
+  .filter((s) => !s.data.ancestor || !ids.has(s.data.ancestor.id))
+  .sort((a, b) => descendantCount(b.id) - descendantCount(a.id));
+
+type Node = { sp: Species; x: number; y: number; parent?: Node };
+const nodes: Node[] = [];
+let row = 0;
+
+function layout(sp: Species, parent?: Node): number {
+  const node: Node = { sp, x: padX + (eraIndex.get(sp.data.era.id) ?? 0) * colW, y: 0, parent };
+  nodes.push(node);
+  const kids = children(species, sp.id);
+  if (kids.length === 0) {
+    node.y = padTop + row++ * rowH;
+  } else {
+    const ys = kids.map((k) => layout(k, node));
+    node.y = (Math.min(...ys) + Math.max(...ys)) / 2;
+  }
+  return node.y;
+}
+roots.forEach((r) => {
+  layout(r);
+  row += 0.5; // breathing room between separate lineages
+});
+
+const width = padX * 2 + (eras.length - 1) * colW + 190;
+const height = padTop + row * rowH;
+---
+<div class="tree-scroll">
+  <svg viewBox={`0 0 ${width} ${height}`} width={width} height={height} role="img" aria-labelledby="tree-title">
+    <title id="tree-title">Family tree of all species in the Magdalena hippo scenario, from today to 20 million years ahead</title>
+    {eras.map((e, i) => (
+      <g>
+        <line class="col" x1={padX + i * colW} x2={padX + i * colW} y1={padTop - 22} y2={height} />
+        <a href={`/hippos/${e.id}/`}>
+          <text class="era" x={padX + i * colW} y={22}>{e.data.label}</text>
+        </a>
+      </g>
+    ))}
+    {nodes.filter((n) => n.parent).map((n) => (
+      <path class="edge" d={`M${n.parent!.x} ${n.parent!.y} H${n.x - colW / 2} V${n.y} H${n.x}`} />
+    ))}
+    {nodes.map((n) => (
+      <a href={`/species/${n.sp.id}/`}>
+        <g class:list={['node', n.sp.data.status]}>
+          <circle cx={n.x} cy={n.y} r="7" />
+          <text x={n.x + 12} y={n.y - 7}>{n.sp.data.name.replace(/\s*\(.*\)$/, '')}</text>
+          <text class="bin" x={n.x + 12} y={n.y + 17}>{n.sp.data.binomial}</text>
+        </g>
+      </a>
+    ))}
+  </svg>
+</div>
+
+<style>
+  .tree-scroll { overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.5rem; }
+  svg { display: block; max-width: none; font-family: var(--font-body); }
+  .col { stroke: var(--border); stroke-dasharray: 3 4; }
+  .era { fill: var(--mud); font-weight: 600; font-size: 14px; }
+  .edge { fill: none; stroke: var(--muted); stroke-width: 1.5; }
+  .node circle { fill: var(--surface); stroke-width: 3; }
+  .node.real circle { stroke: var(--real); fill: var(--real); }
+  .node.canon circle { stroke: var(--canon); }
+  .node.community circle { stroke: var(--community); }
+  .node text { fill: var(--text); font-size: 13px; font-weight: 600; paint-order: stroke; stroke: var(--surface); stroke-width: 5px; stroke-linejoin: round; }
+  .node text.bin { fill: var(--muted); font-size: 11px; font-weight: 400; font-style: italic; }
+  a:hover .node text { fill: var(--accent); }
+  a:hover .node circle { stroke-width: 5; }
+</style>
